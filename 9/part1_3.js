@@ -81,11 +81,6 @@ class DLL {
     }
 }
 
-const replaceChar = (str, index, newChar) =>
-    index >= 0 && index < str.length
-        ? str.slice(0, index) + newChar + str.slice(index + 1)
-        : str;
-
 const getBlocks = (string) => {
     let count = 0
     let fileFlag = true

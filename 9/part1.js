@@ -30,7 +30,6 @@ const sortBlocks = (string) => {
     let sum = 0
     let indFirst = 0
     let indLast = string.length - 1
-    // console.log(string);
     while (indFirst <= indLast) {
         if (string[indFirst] != '.') {
             sum += string[indFirst] * indFirst
@@ -46,18 +45,12 @@ const sortBlocks = (string) => {
                     string = replaceChar(string, indFirst, string[indLast])
                     string = replaceChar(string, indLast, '.')
                 }
-                // console.log(indFirst, indLast, string[indFirst]);
                 if (string[indFirst] != '.' || indFirst == indLast) { cond = false }
-
             }
             if (string[indFirst] != '.')
                 sum += string[indFirst] * indFirst
             indFirst++
         }
-        // console.log(string, sum);
-        // if (indFirst < 100)
-        // console.log(indFirst, indLast);
-
     }
 
     console.log(sum);
