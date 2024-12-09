@@ -113,10 +113,16 @@ const getBlocks = (string) => {
 }
 
 check = (data) => {
+    const start = performance.now();
     const str = data.toString().trim()
     const blocks = getBlocks(str)
     blocks.sort()
     blocks.checksum()
+    const end = performance.now();
+    const duration = end - start;
+    const seconds = Math.floor(duration / 1000);  
+    const milliseconds = Math.floor(duration % 1000);  
+    console.log(`Время выполнения: ${seconds} s ${milliseconds} ms`);
     return 'res'
 }
 
