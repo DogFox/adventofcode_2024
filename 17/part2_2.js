@@ -39,7 +39,7 @@ function getCombo(registy, a) {
 function adv(registry, b) {
     const a = Number(registry.registerA)
     const combo = Number(getCombo(registry, b))
-    const result = Math.trunc(a / Math.pow(2, combo))
+    const result = Math.floor(a / Math.pow(2, combo))
     registry.registerA = result
     return
 }
@@ -51,7 +51,8 @@ function bxl(registry, b) {
 }
 function bst(registry, b) {
     const combo = Number(getCombo(registry, b))
-    const result = combo % 8
+    const result = combo & 7
+    // const result = combo % 8
     registry.registerB = result
     return
 }
@@ -71,7 +72,8 @@ function bxc(registry) {
 }
 function out(registry, b, output) {
     const combo = Number(getCombo(registry, b))
-    const result = combo % 8
+    const result = combo & 7
+    // const result = combo % 8
     output.push(result)
     return
 
@@ -79,14 +81,14 @@ function out(registry, b, output) {
 function bdv(registry, b) {
     const a = Number(registry.registerA)
     const combo = Number(getCombo(registry, b))
-    const result = a / Math.pow(2, combo)
+    const result = Math.floor(a / Math.pow(2, combo))
     registry.registerB = result
     return
 }
 function cdv(registry, b) {
     const a = Number(registry.registerA)
     const combo = Number(getCombo(registry, b))
-    const result = a / Math.pow(2, combo)
+    const result = Math.floor(a / Math.pow(2, combo))
     registry.registerC = result
     return
 }
@@ -138,18 +140,19 @@ function run(registry, program) {
     return output.join(',')
 }
 
-const findInitialA = (sum, index = program.length - 1, program, registry) => {
-    for (let i = 0; i < 8; i++) {
-        let newSum = sum + Math.pow(8, index) * i
-        registry.registerA = newSum;
+const reverseIng = (sum, index = program.length - 1, program, registry) => {
+    if (index < 0) return sum;
+    for (let newA = sum * 8; newA < sum * 8 + 8; newA++) {
+        registry.registerA = newA
         output = run(registry, program);
-        let str = output.reverse().join('');
-        if (output === program.join(',')) {
-            console.log(newSum);
-        } else {
-            const finalVal = findInitialA(newSum, i - 1, program, registry);
+        if (output[0] === program[index]) {
+            const result = reverseIng(newA, index - 1, program, registry);
+            if (result >= 0) {
+                return result;
+            }
         }
     }
+    return -1;
 };
 
 
@@ -157,20 +160,7 @@ check = (data) => {
     const { registerA, registerB, registerC, program: programStr } = parseInput(data)
     let registry = { registerA, registerB, registerC }
 
-    const count = findInitialA(0, programStr.split(',').length - 1, programStr.split(','), registry)
-    // let output = ''
-    // let countSum = 1
-    // let count = 100000
-    // do {
-    //     registry = { registerA, registerB, registerC }
-    //     registry.registerA = count
-    //     count += countSum
-
-    //     output = run(registry, programStr)
-    //     // if (count % 1000000 === 0) {
-    //     console.log('count', count, 'program', output);
-    //     // }
-    // } while (output !== programStr)
+    const count = reverseIng(0, programStr.split(',').length - 1, programStr.split(','), registry)
     console.log(count);
     return 'res'
 }
